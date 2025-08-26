@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Universal – Your Music Universe</title>
+
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+<style>
+  :root{
+    --bg:#0b0b13;
+    --card:rgba(255,255,255,.08);
+    --border:rgba(255,255,255,.15);
+    --text:#e9ecff;
+    --muted:#a9b0d2;
+    --accent:#9b5cff;   /* purple */
+    --accent2:#ff477e;  /* pink  */
+    --accent3:#3dd9ff;  /* cyan  */
+    --radius:22px;
+    --blur:18px;
+    --shadow:0 20px 60px rgba(0,0,0,.35);
+    --glass-shadow:0 12px 40px rgba(0,0,0,.45);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:Poppins, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: radial-gradient(60vw 60vw at -10% -10%, rgba(155,92,255,.25), transparent 50%),
+                radial-gradient(60vw 60vw at 110% 10%, rgba(61,217,255,.18), transparent 50%),
+                radial-gradient(70vw 50vw at 50% 110%, rgba(255,71,126,.12), transparent 60%),
+                var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+  }
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:fixed; inset:0 0 auto 0; height:72px; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 clamp(16px, 5vw, 48px);
+    backdrop-filter:saturate(140%) blur(12px);
+    background:linear-gradient(to bottom, rgba(12,12,20,.65), rgba(12,12,20,.25));
+    border-bottom:1px solid var(--border);
+  }
+  .logo{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.4px}
+  .logo i{color:var(--accent)}
+  .nav a{color:var(--muted); text-decoration:none; margin:0 10px; font-weight:500}
+  .nav a:hover{color:var(--text)}
+  .cta{
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    padding:10px 18px; border-radius:999px; color:#fff !important; font-weight:700;
+    box-shadow:0 8px 28px rgba(155,92,255,.35);
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100vh; display:grid; grid-template-columns: 1.1fr .9fr;
+    gap:40px; align-items:center; padding: clamp(90px, 12vh, 140px) clamp(20px,6vw,80px) 60px;
+    position:relative;
+  }
+  .glow-ring{
+    position:absolute; width:800px; height:800px; border-radius:50%;
+    background:radial-gradient(circle at 50% 50%, rgba(155,92,255,.35), transparent 60%);
+    filter:blur(60px); top:-200px; right:-200px; pointer-events:none; animation:float 9s ease-in-out infinite;
+  }
+  @keyframes float{50%{transform:translateY(18px) translateX(-8px)}}
+
+  .hero h1{
+    font-size:clamp(34px, 5vw, 64px); line-height:1.1; margin:0 0 14px;
+    font-weight:800;
+  }
+  .gradient{
+    background:linear-gradient(135deg, var(--accent3), var(--accent2) 55%, var(--accent));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .lead{color:var(--muted); max-width:560px; margin:6px 0 24px}
+
+  .store-buttons{display:flex; gap:12px; flex-wrap:wrap}
+  .store{
+    display:flex; align-items:center; gap:10px; padding:10px 16px; border-radius:14px;
+    background:var(--card); border:1px solid var(--border); backdrop-filter: blur(var(--blur));
+    box-shadow:var(--glass-shadow); color:#fff; text-decoration:none; transition:transform .15s ease;
+  }
+  .store i{font-size:20px; color:var(--accent3)}
+  .store:hover{transform:translateY(-3px)}
+
+  .right-stack{position:relative; display:flex; flex-direction:column; gap:18px}
+  .glass{
+    background:var(--card); border:1px solid var(--border); backdrop-filter: blur(var(--blur));
+    border-radius:var(--radius); padding:16px; box-shadow:var(--glass-shadow);
+  }
+  .card-nowplaying{display:flex; gap:14px; align-items:center}
+  .cover{
+    width:68px; height:68px; border-radius:14px;
+    background:url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=800&auto=format&fit=crop') center/cover;
+  }
+  .track-title{font-weight:700}
+  .track-meta{font-size:12px; color:var(--muted)}
+  .progress{height:6px; background:rgba(255,255,255,.1); border-radius:6px; overflow:hidden; margin-top:8px}
+  .bar{height:100%; width:30%; background:linear-gradient(90deg, var(--accent), var(--accent2))}
+
+  .card-playlist{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px}
+  .mini{
+    background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:14px; padding:10px;
+    display:flex; align-items:center; gap:10px; transition:transform .2s ease, background .2s;
+  }
+  .mini .thumb{width:46px; height:46px; border-radius:10px; background:#111 center/cover no-repeat}
+  .mini:hover{transform:translateY(-4px); background:rgba(255,255,255,.1)}
+  .thumb.t1{background-image:url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=400&auto=format&fit=crop')}
+  .thumb.t2{background-image:url('https://images.unsplash.com/photo-1483412033650-1015ddeb83d1?q=80&w=400&auto=format&fit=crop')}
+  .thumb.t3{background-image:url('https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=400&auto=format&fit=crop')}
+  .thumb.t4{background-image:url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=400&auto=format&fit=crop')}
+
+  /* ---------- SECTIONS BELOW (pages) ---------- */
+  section.block{padding: 90px clamp(20px,6vw,80px); border-top:1px dashed rgba(255,255,255,.06)}
+  .section-title{font-size:clamp(26px,3.2vw,40px); margin:0 0 22px}
+  .muted{color:var(--muted)}
+
+  /* Features */
+  .features{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px}
+  .feat{
+    background:var(--card); border:1px solid var(--border); border-radius:18px; padding:20px; backdrop-filter: blur(var(--blur));
+    box-shadow:var(--glass-shadow);
+  }
+  .feat i{font-size:22px; color:var(--accent2)}
+  .feat h4{margin:10px 0 6px}
+
+  /* Screens (mock gallery) */
+  .screens{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px}
+  .shot{
+    aspect-ratio: 10/16; border-radius:22px; background:#10121b center/cover;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+    background-image:url('https://images.unsplash.com/photo-1526178612508-2b8270c1b78d?q=80&w=900&auto=format&fit=crop');
+    position:relative; overflow:hidden;
+  }
+  .shot:after{
+    content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent, rgba(0,0,0,.5));
+  }
+
+  /* Pricing */
+  .pricing{display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:22px}
+  .plan{
+    background:var(--card); border:1px solid var(--border); border-radius:20px; padding:24px; position:relative;
+    backdrop-filter: blur(var(--blur)); box-shadow:var(--glass-shadow);
+  }
+  .plan.best{outline:2px solid var(--accent); transform:translateY(-6px)}
+  .price{font-size:36px; font-weight:800}
+  .check{margin:10px 0; color:var(--muted)}
+  .plan .btn{display:block; text-align:center; margin-top:16px}
+
+  /* FAQ */
+  .faq{max-width:900px}
+  details{background:rgba(255,255,255,.06); border:1px solid var(--border); border-radius:14px; padding:16px; margin:10px 0}
+  summary{cursor:pointer; font-weight:600}
+  details[open]{background:rgba(255,255,255,.1)}
+
+  /* Footer */
+  footer{
+    padding:36px 24px; text-align:center; color:#c7c9e0; border-top:1px solid rgba(255,255,255,.08)
+  }
+
+  /* Responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr; padding-top:110px}
+    .right-stack{order:-1}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo"><i class="fa-solid fa-wave-square"></i> Universal</div>
+  <div class="links">
+    <a href="#features">Features</a>
+    <a href="#screens">Screens</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contact" class="cta">Get Started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="home">
+  <div class="glow-ring" aria-hidden="true"></div>
+
+  <!-- Right stack: glass cards -->
+  <div class="right-stack">
+    <div class="glass card-nowplaying">
+      <div class="cover" aria-hidden="true"></div>
+      <div>
+        <div class="track-title">Stay (feat. Justin B.)</div>
+        <div class="track-meta">Single • 3:21</div>
+        <div class="progress"><div class="bar" id="progressBar"></div></div>
+      </div>
+      <i class="fa-solid fa-play" style="margin-inline-start:auto;color:var(--accent3)"></i>
+    </div>
+
+    <div class="glass card-playlist">
+      <div class="mini"><div class="thumb t1"></div><div><b>Night Vibes</b><div class="track-meta">Chill • 24 tracks</div></div></div>
+      <div class="mini"><div class="thumb t2"></div><div><b>Top 50</b><div class="track-meta">Hits • Weekly</div></div></div>
+      <div class="mini"><div class="thumb t3"></div><div><b>Focus Beats</b><div class="track-meta">Lo-fi • Work</div></div></div>
+      <div class="mini"><div class="thumb t4"></div><div><b>Retro Wave</b><div class="track-meta">80s • Synth</div></div></div>
+    </div>
+  </div>
+
+  <!-- Left content -->
+  <div>
+    <h1>Explore <span class="gradient">Your Universe</span> of Music</h1>
+    <p class="lead">Find your favorite artists, playlists, podcasts and stations — everything you love, all in one beautiful dark-mode experience.</p>
+    <div class="store-buttons">
+      <a class="store" href="#"><i class="fa-brands fa-apple"></i><span>Download on <b>App Store</b></span></a>
+      <a class="store" href="#"><i class="fa-brands fa-google-play"></i><span>Get it on <b>Google Play</b></span></a>
+    </div>
+  </div>
+</header>
+
+<!-- FEATURES -->
+<section class="block" id="features">
+  <h2 class="section-title">Features</h2>
+  <p class="muted" style="max-width:720px">Built for speed and joy: neon-smooth UI, offline mode, AI recommendations and collaborative playlists.</p>
+  <div class="features" style="margin-top:18px">
+    <div class="feat"><i class="fa-solid fa-bolt"></i><h4>Ultra Fast</h4><p class="muted">Instant playback and buttery animations.</p></div>
+    <div class="feat"><i class="fa-solid fa-wand-magic-sparkles"></i><h4>AI Picks</h4><p class="muted">Smart mixes tailored to your mood.</p></div>
+    <div class="feat"><i class="fa-solid fa-cloud-arrow-down"></i><h4>Offline Mode</h4><p class="muted">Download your playlists for flights.</p></div>
+    <div class="feat"><i class="fa-solid fa-users"></i><h4>Collab Playlists</h4><p class="muted">Create lists with friends in real time.</p></div>
+  </div>
+</section>
+
+<!-- SCREENS / GALLERY -->
+<section class="block" id="screens">
+  <h2 class="section-title">App Screens</h2>
+  <div class="screens">
+    <div class="shot"></div>
+    <div class="shot" style="background-image:url('https://images.unsplash.com/photo-1519139270028-ab664cf42264?q=80&w=900&auto=format&fit=crop')"></div>
+    <div class="shot" style="background-image:url('https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=900&auto=format&fit=crop')"></div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="block" id="pricing">
+  <h2 class="section-title">Pricing</h2>
+  <div class="pricing">
+    <div class="plan">
+      <h3>Free</h3>
+      <div class="price">$0</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Shuffle Play</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Ads Supported</div>
+      <a class="store btn" href="#" style="justify-content:center">Start Free</a>
+    </div>
+    <div class="plan best">
+      <h3>Premium</h3>
+      <div class="price">$6.99</div>
+      <div class="check"><i class="fa-solid fa-check"></i> No Ads</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Offline Downloads</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Hi-Fi Quality</div>
+      <a class="store btn" href="#" style="justify-content:center">Go Premium</a>
+    </div>
+    <div class="plan">
+      <h3>Family</h3>
+      <div class="price">$10.99</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Up to 6 accounts</div>
+      <div class="check"><i class="fa-solid fa-check"></i> Parental Controls</div>
+      <a class="store btn" href="#" style="justify-content:center">Start Family</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="block" id="faq">
+  <h2 class="section-title">FAQ</h2>
+  <div class="faq">
+    <details>
+      <summary>Can I import playlists from other apps?</summary>
+      <p class="muted">Yes, import your playlists in a few clicks from the settings page.</p>
+    </details>
+    <details>
+      <summary>Does Premium work offline?</summary>
+      <p class="muted">Absolutely. Download tracks and listen without internet.</p>
+    </details>
+    <details>
+      <summary>Is there a student discount?</summary>
+      <p class="muted">Students get 50% off the Premium plan. Verification required.</p>
+    </details>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="block" id="contact">
+  <h2 class="section-title">Contact</h2>
+  <p class="muted" style="max-width:740px">Want to partner or have feedback? Drop us a line.</p>
+  <div class="features" style="margin-top:16px">
+    <form class="feat" style="display:grid; gap:12px">
+      <input placeholder="Your name" style="border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:12px;color:#fff;outline:none">
+      <input placeholder="Email" type="email" style="border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:12px;color:#fff;outline:none">
+      <textarea placeholder="Message" rows="4" style="border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.06);padding:12px;color:#fff;outline:none"></textarea>
+      <button class="store" type="submit" style="justify-content:center">Send Message</button>
+    </form>
+    <div class="feat" style="display:flex;flex-direction:column;gap:10px">
+      <div><i class="fa-solid fa-location-dot"></i>  221B Neon Street, Digital City</div>
+      <div><i class="fa-solid fa-envelope"></i>  hello@universal.app</div>
+      <div><i class="fa-brands fa-x-twitter"></i>  @universal_app</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Universal – Crafted with ❤ for music lovers
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('.nav a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  // Tiny "now playing" progress animation
+  const bar=document.getElementById('progressBar');
+  let w=30, dir=1;
+  setInterval(()=>{ 
+    w += dir*1.2; 
+    if(w>95||w<5) dir*=-1; 
+    bar.style.width = w + '%'; 
+  }, 60);
+</script>
+</body>
+</html>
+
+
